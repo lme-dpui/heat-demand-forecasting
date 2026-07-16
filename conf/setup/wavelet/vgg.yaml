@@ -1,0 +1,50 @@
+architecture:
+  network: vgg
+  style: wavelet_standard
+  convolution:
+    conv_layers: [32, 64, 128]
+    kernel_size: [3, 3, 3]
+    stride_length: [1, 1, 1]
+    padding: same
+    pooling: False
+    max_pool_kernel: [2, 2, 2]
+    max_pool_stride: [1, 1, 1]
+    activation_function_conv: relu
+
+  dense:
+    dense_layers: [1024, 1024]
+    dropout: 0.1
+    activation_function_dense: leaky_relu
+
+  batch_norm: False
+
+encoding_schema:
+  encoding_type: wavelet
+  wavelet_function: morl  # paper's selected mother wavelet for 2 of 3 zones (gaus8 for the third, see Table A.12)
+  num_frequencies: 24
+
+# gaus4
+# [mexh,morl,gaus1,gaus2,gaus3,gaus4,gaus5,gaus6,gaus7,gaus8,cgau1,cgau2,cgau3,cgau4,cgau5,cgau6,cgau7,cgau8,cmor0.1-1.0,shan1.5-1.0]
+
+
+#architecture:
+#  network: vgg
+#  style: wavelet_standard
+#  convolution:
+#    conv_layers: [16]
+#    kernel_size: [3]
+#    stride_length: [1]
+#    padding: same
+#    pooling: False
+#    max_pool_kernel: [2]
+#    max_pool_stride: [1]
+#    activation_function_conv: relu
+#
+#  dense:
+#    dense_layers: [2048, 1024, 512, 256]
+#    dropout: 0
+#    activation_function_dense: leaky_relu
+#
+#  num_heads: 8
+#  attn_dropout: 0
+#  batch_norm: False

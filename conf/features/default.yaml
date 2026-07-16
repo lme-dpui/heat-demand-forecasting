@@ -1,0 +1,23 @@
+# @package variables.features
+# Baseline feature subset. Toggle what to include per source; src/feature_names.py
+# expands it to the model's input channels in a fixed, documented order, so the
+# same subset always yields the same channels (and the same model behavior).
+# See conf/README.md for the full option reference.
+demand:
+  raw: true                            # include the raw demand series (cons)
+  decompose: [seasonal, trend, resid]  # decomposition parts of demand to include
+  lags_days: [6]                       # day-lags added to the raw + decomposed demand
+weather:
+  decompose:                           # decomposition of the next-day weather signal
+    temp: [trend, resid]
+    feels_like: [trend, resid]
+  raw: [feels_like, temp]              # raw next-day weather variables (in this order)
+  future_days: [1]                     # forecast horizon (days ahead) for the next-day raw weather
+  decompose_current_day:               # decomposition of the current-day weather signal
+    temp: [trend, resid]
+    feels_like: [trend, resid]
+  raw_current_day: [feels_like, temp]  # raw current-day weather variables
+calendar:
+  # h_lagged: on holidays, source the *_past_6 lag features from the previous
+  # occurrence of the same holiday instead of a fixed 6-day lag.
+  use_previous_holiday: true

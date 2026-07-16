@@ -1,0 +1,38 @@
+# Claude Code
+CLAUDE.md
+docs/
+
+# Hydra run outputs
+multirun/
+outputs/
+results/
+
+# Proprietary meter/weather data (default HEAT_DATA_DIR location, see README/definitions.py)
+# Folder itself is tracked (via data/.gitkeep) but its contents are not.
+data/*
+!data/.gitkeep
+
+# Paper PDF - CC BY licensed but not bundled here; cite the DOI in README instead
+paper/*.pdf
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+build/
+dist/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Env / logs
+.env
+*.log

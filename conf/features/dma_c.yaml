@@ -1,0 +1,23 @@
+# @package variables.features
+# Paper "Proposed" final feature set for DMA C (paper Table 10). The decomposed
+# subset [M_C^d, t_amb^d, t_feels^d, t_max^d] — identical to DMA B — but with NO
+# holiday features: in Table 10 the baseline (no holiday handling) was best for
+# DMA C, and the previous-holiday lag (h_lagged) in particular degraded accuracy,
+# so both holiday strategies are left off here. The decomposed form is
+# t_x^d = raw + trend + residual (paper Table 3 / Section 3.1.3). The seasonal
+# component of the weather signals is intentionally excluded (the paper folds
+# seasonality in via demand's own components). See conf/README.md.
+demand:
+  raw: true
+  decompose: [seasonal, trend, resid]
+  lags_days: [6]
+weather:
+  decompose:
+    temp:       [trend, resid]
+    feels_like: [trend, resid]
+    temp_max:   [trend, resid]
+  raw: [temp, feels_like, temp_max]
+  future_days: [1]
+calendar:
+  # h_lagged off: Table 10 found no holiday handling best for DMA C.
+  use_previous_holiday: false

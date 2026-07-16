@@ -1,0 +1,13 @@
+numpy
+pandas
+torch>=2.7
+pywavelets
+scikit-learn
+statsmodels
+holidays
+matplotlib
+plotly
+kaleido
+tqdm
+hydra-core
+omegaconf

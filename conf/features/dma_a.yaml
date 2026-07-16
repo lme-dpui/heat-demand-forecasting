@@ -1,0 +1,26 @@
+# @package variables.features
+# Paper "Proposed" final feature set for DMA A (paper Table 10). The decomposed
+# subset [M_C^d, t_amb^d, t_feels^d, t_min^d] — next-day ambient, feels-like and
+# minimum temperature, each in the decomposed form t_x^d = raw + trend + residual
+# (paper Table 3 / Section 3.1.3) — plus the holiday handling that was best for
+# DMA A in Table 10: the combined (h_lagged + h_categorical) strategy. The
+# seasonal component of the weather signals is intentionally excluded (the paper
+# folds seasonality in via demand's own components). See conf/README.md.
+demand:
+  raw: true
+  decompose: [seasonal, trend, resid]
+  lags_days: [6]
+weather:
+  decompose:
+    temp:       [trend, resid]
+    feels_like: [trend, resid]
+    temp_min:   [trend, resid]
+  raw: [temp, feels_like, temp_min]
+  future_days: [1]
+calendar:
+  # h_categorical: explicit holiday flag for the forecast (next) day — the day
+  # whose demand is being predicted.
+  holiday_next_day: true
+  # h_lagged: on holidays, source the *_past_6 lag features from the previous
+  # occurrence of the same holiday instead of a fixed 6-day lag.
+  use_previous_holiday: true

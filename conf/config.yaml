@@ -1,0 +1,53 @@
+# Top-level Hydra run config. See conf/README.md for a full field-by-field
+# guide, including the feature-variable naming convention used below.
+# Any field here can be overridden from the command line, e.g.:
+#   python main.py paths.dma=dma_a model_params.lr=0.0005
+
+hydra:
+  run:
+    dir: outputs/${info.experiment_no}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+
+defaults:
+  - setup: wavelet/vgg  # architecture + wavelet encoding params, see conf/setup/wavelet/vgg.yaml
+  - features: dma_a  # named feature set from conf/features/, override with features=<name>
+  - _self_
+
+info:
+  comments: baseline  # free-text note describing the run, shown in logs
+  experiment_no: baseline  # labels the run's output folder: outputs/<experiment_no>/<date>/<time>/
+
+paths:
+  dma: dma_a  # DMA: dma_a | dma_b | dma_c (see README's data layout)
+  summed_averaged: True  # True -> *_norm_aggregated.csv (per-meter average), False -> *_aggregated.csv (total)
+  weather_data_path: weather.csv
+
+variables:
+  # `features` (the feature-subset spec) is provided by the `features` group
+  # selected in `defaults` above (conf/features/<name>.yaml). Switch sets with
+  # `features=<name>`,
+  # `variables.features.weather.decompose.temp=[trend,resid]`. See conf/README.md.
+  # (Holiday handling — the categorical flag and the previous-holiday lag — lives
+  # in the selected feature set's `calendar` block, not here, so it can differ
+  # per DMA; see conf/features/.)
+  plot_forecast_individually: 1  # save one plot per test sample in addition to the aggregate plot
+  plot_sample_size: 4  # number of individual samples to plot
+
+model_params:
+  epoch: 1000  # max training epochs (paper Section 2.6.2 / Table A.12)
+  restore_epoch: -1  # -1 trains from scratch; otherwise resumes from this epoch's checkpoint
+  lr: 0.001
+  lr_scheduler_factor: 0.9  # ReduceLROnPlateau decay factor on a validation-loss plateau (paper Section 2.6.2)
+  batch_size: 32
+  patience: 50  # early-stopping patience, in epochs (paper Section 2.6.2)
+  loss_function: MSE
+
+time:
+  start_time_train: 2016-01-01 00:00:00  # inclusive lower bound of the full dataset
+  end_time_test: 2020-01-01 00:00:00  # exclusive upper bound of the full dataset
+  percentage_of_train_data: 1  # fraction of the pre-test period used for training
+  data_length_in_weeks_test: 52  # length of the held-out test window
+  historical_values: 24  # lookback window fed to the model, in hours
+  prediction_horizon: 24  # forecast horizon, in hours
+  validation_period: 0.2  # fraction of training data held out for validation
